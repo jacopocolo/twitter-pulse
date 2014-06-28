@@ -4,7 +4,7 @@ var app = require('http').createServer(handler),
     sys = require('sys'),
 	Twit = require('twit'); 
  
-app.listen(5000);
+app.listen(process.env.PORT || 5000);
  
 var T = new Twit({
     consumer_key: 'z0eohrJHpzuN8Ollf4SmgJyPV'
