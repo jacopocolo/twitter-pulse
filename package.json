@@ -1,0 +1,27 @@
+{
+  "name": "tweet-tree",
+  "version": "0.0.1",
+  "description": "A simple app for fetching tweets",
+  "main": "app.js",
+  "dependencies": {
+    "socket.io": "^1.0.6",
+    "twit": "^1.1.15",
+    "twitter": "^0.2.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "-"
+  },
+  "keywords": [
+    "-"
+  ],
+  "author": "Jacopo Colò",
+  "license": "MIT",
+"engines": {
+  "node": ">=0.10.29"
+  }
+}
