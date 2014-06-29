@@ -25,32 +25,27 @@ function handler (req, res) {
     res.end(data);
   });
 }
- 
-/*var tweet = io.of('tweet');*/
 
-function streamSearched(ricerca) {
+//The function grabs the search term trough ricerca parameter and the client.id trough the id paramenter.
+
+function streamSearched(ricerca, id) {
 	var stream = T.stream('statuses/filter', { track: ricerca })
 	
+	console.log(id);
 	console.log(ricerca + " tweet");
-	stream.on('tweet', function (tweet) {
-	    io.sockets.emit('tweet', tweet.text);
-	    console.log(tweet.text);
-	});
+		stream.on('tweet', function (tweet) {
+		    console.log(tweet.text);
+		    io.sockets.in(id).emit('tweet', tweet.text);
+		});
+	
 };
 
+//Opens the connection with the client, gets ready to recive a search term (trough prompt on client-side) and passes search-termn and client-id to the streamSearched function.
+
 io.sockets.on('connection', function(client) {
-    
-	client.on('search', function(searchterm) {
-		console.log(searchterm);
-			streamSearched(searchterm);
+		client.on('search', function(searchterm) {
+				console.log(searchterm);
+					console.log(client.id);
+						streamSearched(searchterm, client.id);
 	});
 });
-
-
-
-/*twit.stream('statuses/filter', { track: 'nutella' }, function(stream) {
-  stream.on('data', function (data) {
-    io.sockets.emit('tweet', data.text);
-    console.log('.');
-  });
-});*/
