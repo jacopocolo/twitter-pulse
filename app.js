@@ -27,13 +27,26 @@ function handler (req, res) {
 }
  
 /*var tweet = io.of('tweet');*/
- 
-var stream = T.stream('statuses/filter', { track: 'nutella' })
 
-stream.on('tweet', function (tweet) {
-    io.sockets.emit('tweet', tweet.text);
-    console.log(tweet.text);
+function streamSearched(ricerca) {
+	var stream = T.stream('statuses/filter', { track: ricerca })
+	
+	console.log(ricerca + " tweet");
+	stream.on('tweet', function (tweet) {
+	    io.sockets.emit('tweet', tweet.text);
+	    console.log(tweet.text);
+	});
+};
+
+io.sockets.on('connection', function(client) {
+    
+	client.on('search', function(searchterm) {
+		console.log(searchterm);
+			streamSearched(searchterm);
+	});
 });
+
+
 
 /*twit.stream('statuses/filter', { track: 'nutella' }, function(stream) {
   stream.on('data', function (data) {

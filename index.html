@@ -12,4 +12,8 @@
     tweets.innerHTML = tweets.innerHTML + '<br>' + data;
     console.log(tweets.innerHTML);
   });
+  
+  socket.on('connect', function(){
+                      socket.emit('search', prompt("What do you want to search?"));
+                  });
 </script>
