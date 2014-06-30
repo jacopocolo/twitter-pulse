@@ -22,26 +22,9 @@
 <script src="http://www.jacopocolo.com/paperjs/js/paper-full.min.js"></script>
 
 <script>
-  var socket = io.connect('/'),
-      tweets = document.getElementById('tweets');
-  socket.on('tweet', function (data) {
-    tweets.innerHTML = tweets.innerHTML + '<br>' + data;
-    console.log(tweets.innerHTML);
-    
-    var cerchio = new Shape.Circle({
-        center: [10, 10],
-        radius: 30,
-        strokeColor: 'black'
-    });
-  
-  });
-  
-  socket.on('connect', function(){
-                      socket.emit('search', prompt("What do you want to search?"));
-                  });
-</script>
+var scope = new paper.PaperScope();
+scope.setup('sketch');
 
-<script type="text/paperscript" canvas="sketch">	
 	var canvas = document.getElementById('sketch');
 	var centrox = canvas.height/2;
 	var centroy = canvas.width/2;
@@ -70,7 +53,24 @@
 	else {crescita = 10};
 	}
 	
-	
+//SOCKET.IO
 
-	</script>
+  var socket = io.connect('/'),
+      tweets = document.getElementById('tweets');
+  socket.on('tweet', function (data) {
+    tweets.innerHTML = tweets.innerHTML + '<br>' + data;
+    console.log(tweets.innerHTML);
+    
+    var cerchiotweet = new Shape.Circle({
+        center: [10, 10],
+        radius: 30,
+        strokeColor: 'black'
+    });
+  
+  });
+  
+  socket.on('connect', function(){
+                      socket.emit('search', prompt("What do you want to search?"));
+                  });
+</script>
 </body>
