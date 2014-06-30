@@ -27,6 +27,13 @@
   socket.on('tweet', function (data) {
     tweets.innerHTML = tweets.innerHTML + '<br>' + data;
     console.log(tweets.innerHTML);
+    
+    var cerchio = new Shape.Circle({
+        center: [10, 10],
+        radius: 30,
+        strokeColor: 'black'
+    });
+  
   });
   
   socket.on('connect', function(){
