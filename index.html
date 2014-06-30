@@ -1,11 +1,25 @@
 <!doctype html>
- 
+<head>
+<style>
+	body {
+    margin:0;
+    height: 100%;
+	}
+
+	#sketch {
+ 	width: 500px;
+ 	height: 500px;
+ 	margin: 10px;
+	}
+	</style>
+</head>
 <title>Socket.io Demo</title>
  
 <div id="tweets"></div>
  
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/paper-full.min.js"></script>
+
 <script>
   var socket = io.connect('/'),
       tweets = document.getElementById('tweets');
@@ -18,3 +32,36 @@
                       socket.emit('search', prompt("What do you want to search?"));
                   });
 </script>
+
+<script type="text/paperscript" canvas="sketch">	
+	var canvas = document.getElementById('sketch');
+	var centrox = canvas.height/2;
+	var centroy = canvas.width/2;
+	console.log(centrox, centroy);
+	
+	var cerchio = new Shape.Circle({
+	    center: [centrox, centroy],
+	    radius: 30,
+	    strokeColor: 'black'
+	});
+	
+	var bordo = new Shape.Rectangle({
+		point: [0,0],
+		size: [500, 500],
+		strokeColor: 'black'
+	});
+	
+	console.log(cerchio.size.height);
+
+	var crescita = 10;
+	
+	
+	function onFrame(event) {
+	cerchio.size += crescita;
+	if (cerchio.size.height > 500) {crescita = 0}
+	else {crescita = 10};
+	}
+	
+	
+
+	</script>
