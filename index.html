@@ -26,44 +26,46 @@ window.onload = function() {
 var canvas = document.getElementById('sketch');
 paper.setup(canvas);
 
-var path = new paper.Path();
-		// Give the stroke a color
-		path.strokeColor = 'black';
-		var start = new paper.Point(100, 100);
-		// Move to start and draw a line from there
-		path.moveTo(start);
-		// Note that the plus operator on Point objects does not work
-		// in JavaScript. Instead, we need to call the add() function:
-		path.lineTo(start.add([ 200, -50 ]));
-	
-function drawLine() {
-var path = new paper.Path();
-		// Give the stroke a color
-		path.strokeColor = 'black';
-		var start = new paper.Point(100, 100);
-		// Move to start and draw a line from there
-		path.moveTo(start);
-		// Note that the plus operator on Point objects does not work
-		// in JavaScript. Instead, we need to call the add() function:
-		path.lineTo(start.add([ 300, -100 ]));
-
-};
-
+var halfx = canvas.height/2;
+var halfy = canvas.width/2;
+console.log(halfx, halfy);
 paper.view.draw();
+
 };
+
 //SOCKET.IO
 
   var socket = io.connect('/'),
-      tweets = document.getElementById('tweets');
-  socket.on('tweet', function (data) {
-    tweets.innerHTML = tweets.innerHTML + '<br>' + data;
-    console.log(tweets.innerHTML);
-    drawLine();
   
-  });
+  tweets = document.getElementById('tweets');
+  socket.on('tweet', function (data, dataliste, datacolore) {
+  //  tweets.innerHTML = tweets.innerHTML + '<br>' + data;
+    console.log(dataliste, datacolore);
+    drawLine(datacolore);
+    });
   
   socket.on('connect', function(){
-                      socket.emit('search', prompt("What do you want to search?"));
+                      socket.emit('search', prompt("What do you want to search on Twitter?"));
                   });
+                  
+function drawLine(colore) {
+	
+	var cerchio = new paper.Shape.Circle({
+	    center: [250, 250],
+	    radius: 10,
+	    fillColor: '#'+colore,
+	    strokeWidth: 2,
+	    opacity: 0.5
+	});
+	
+	paper.view.onFrame = function(event) {
+	console.log(event.count);
+	cerchio.radius += 1;
+	};
+	
+	paper.view.draw();
+	console.log("disegnata!");
+};
+
 </script>
 </body>
