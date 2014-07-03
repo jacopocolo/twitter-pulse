@@ -7,65 +7,82 @@
 	}
 
 	#sketch {
- 	width: 500px;
- 	height: 500px;
- 	margin: 10px;
+ 	/*width: 500px;
+ 	height: 500px;*/
+ 	margin: 0 auto;
 	}
 	</style>
+	
 </head>
-<title>Socket.io Demo</title>
+<title>Demo</title>
 <body>
-<canvas id="sketch"></canvas>
+<canvas id="sketch" data-paper-keepalive="true" keepalive="true" resize="true"></canvas>
 <div id="tweets"></div>
  
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://www.jacopocolo.com/paperjs/js/paper-full.min.js"></script>
 
 <script>
+var children;
+
 window.onload = function() {
 var canvas = document.getElementById('sketch');
 paper.setup(canvas);
-
 var halfx = canvas.height/2;
 var halfy = canvas.width/2;
+var velocita = canvas.height/600;
 console.log(halfx, halfy);
-paper.view.draw();
 
+children = paper.project.activeLayer.children;
+
+paper.view.onFrame = function(event) {
+
+for (var i = 0; i < children.length; i++) {
+	/*var child = children[i];
+	child.radius = velocita;*/
+	children[i].radius += velocita;
+	if (children[i].radius > canvas.height) {
+		children[i].remove();
+		}
+	}
+
+paper.view.draw();
 };
 
 //SOCKET.IO
 
-  var socket = io.connect('/'),
+var socket = io.connect('/'),
   
   tweets = document.getElementById('tweets');
-  socket.on('tweet', function (data, dataliste, datacolore) {
+  socket.on('tweet', function (data, data_screen_name, datacolore) {
   //  tweets.innerHTML = tweets.innerHTML + '<br>' + data;
-    console.log(dataliste, datacolore);
-    drawLine(datacolore);
+    console.log(data);
+    drawLine(data_screen_name, datacolore);
     });
   
   socket.on('connect', function(){
                       socket.emit('search', prompt("What do you want to search on Twitter?"));
                   });
                   
-function drawLine(colore) {
+function drawLine(username, colore) {
 	
 	var cerchio = new paper.Shape.Circle({
 	    center: [250, 250],
 	    radius: 10,
-	    fillColor: '#'+colore,
-	    strokeWidth: 2,
-	    opacity: 0.5
+	    strokeColor: '#'+colore,
+	    strokeWidth: 1
 	});
 	
-	paper.view.onFrame = function(event) {
-	console.log(event.count);
-	cerchio.radius += 1;
+	//contatore++;
+	//console.log(contatore);
+	//cerchi.push(cerchio);
+	//console.log(cerchi[3]);
+	
+	//cerchi[contatore].radius += velocita;
+	
 	};
 	
 	paper.view.draw();
-	console.log("disegnata!");
 };
-
 </script>
 </body>

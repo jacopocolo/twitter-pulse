@@ -35,7 +35,7 @@ function streamSearched(ricerca, id) {
 	console.log(ricerca + " tweet");
 		stream.on('tweet', function (tweet) {
 		    console.log(tweet.text);
-		    io.sockets.in(id).emit('tweet', tweet.text);
+		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.screen_name, tweet.user.profile_link_color);
 		});
 	
 };
