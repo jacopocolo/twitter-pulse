@@ -35,7 +35,7 @@ function streamSearched(ricerca, id) {
 	console.log(ricerca + " tweet");
 		stream.on('tweet', function (tweet) {
 		    console.log(tweet.text);
-		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.screen_name, tweet.user.profile_link_color);
+		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.followers_count, tweet.user.profile_link_color);
 		});
 	
 };
@@ -47,5 +47,16 @@ io.sockets.on('connection', function(client) {
 				console.log(searchterm);
 					console.log(client.id);
 						streamSearched(searchterm, client.id);
+		
+		client.on('disconnect', function () {
+			console.log('client disconnected');
+			
+			//Trova un modo di fermare lo stream per lo specifico client
+			//var stream = T.stream();
+			//stream.stop();
+			});					
+		
 	});
+
+
 });
