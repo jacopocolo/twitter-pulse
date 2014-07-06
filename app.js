@@ -7,10 +7,10 @@ var app = require('http').createServer(handler),
 app.listen(process.env.PORT || 5000);
  
 var T = new Twit({
-    consumer_key: 'z0eohrJHpzuN8Ollf4SmgJyPV'
-  , consumer_secret: '9x7UQYJPBBKNUZ32nJydD4qi8NogRtFYZBJqC55JLRfqodh0K3'
-  , access_token: '2555415415-ipzTiOcHMpOyK6NuYa5SFURxR9OjjbZcGgPyDU8'
-  , access_token_secret: 'hyFYm6kY16CMVFtPI6miOS137wkMV3tod6XlSMn6EIXCQ'
+    consumer_key: '1bvvNuNE6x2rcfjD6LdZIIgK2'
+  , consumer_secret: 'mL0eexKsDEvGacZyYRvWESFkDYNK20PO5Dn4kjio4CsnYee00a'
+  , access_token: '2555415415-1af8frPHZMXTjEM5GSNXF0lOoQ6gFAG8l4cX5ad'
+  , access_token_secret: 'ZE82pyIZjeksmIHP6G32QfJlJeBtYM5COWtUTZoihreYS'
 });
  
 function handler (req, res) {
@@ -27,9 +27,14 @@ function handler (req, res) {
 }
 
 //The function grabs the search term trough ricerca parameter and the client.id trough the id paramenter.
+var stream; //defined here so I cann call it to stop later
 
 function streamSearched(ricerca, id) {
-	var stream = T.stream('statuses/filter', { track: ricerca })
+	stream = T.stream('statuses/filter', { track: ricerca })
+	
+	stream.on('connected', function (response) {
+	  console.log(response);
+	})
 	
 	console.log(id);
 	console.log(ricerca + " tweet");
@@ -37,6 +42,11 @@ function streamSearched(ricerca, id) {
 		    console.log(tweet.text);
 		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.followers_count, tweet.user.profile_link_color);
 		});
+		
+		stream.on('limit', function (limitMessage) {
+		  console.log('Limit message: '+limitMessage);
+		})
+	
 	
 };
 
@@ -50,7 +60,7 @@ io.sockets.on('connection', function(client) {
 		
 		client.on('disconnect', function () {
 			console.log('client disconnected');
-			
+			stream.stop();
 			//Trova un modo di fermare lo stream per lo specifico client
 			//var stream = T.stream();
 			//stream.stop();
