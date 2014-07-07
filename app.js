@@ -14,7 +14,7 @@ var T = new Twit({
 });
  
 function handler (req, res) {
-  fs.readFile(__dirname + '/index.html',
+  fs.readFile('http://www.jacopocolo.com/paperjs/index.html',
   function (err, data) {
     if (err) {
       res.writeHead(500);
@@ -28,18 +28,20 @@ function handler (req, res) {
 
 //The function grabs the search term trough ricerca parameter and the client.id trough the id paramenter.
 var stream; //defined here so I cann call it to stop later
+var skippabletweets = [];
 
 function streamSearched(ricerca, id) {
 	stream = T.stream('statuses/filter', { track: ricerca })
 	
 	stream.on('connected', function (response) {
-	  console.log(response);
+	  //console.log(response);
+	  console.log("CONNESSO");
 	})
 	
 	console.log(id);
 	console.log(ricerca + " tweet");
 		stream.on('tweet', function (tweet) {
-		    console.log(tweet.text);
+		   		    
 		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.followers_count, tweet.user.profile_link_color);
 		});
 		
