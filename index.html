@@ -3,16 +3,14 @@
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes" />
 <style>
-	body {
+	html, body {
     margin:0;
     border: 0;
     padding: 0;
-	}
-	
-	#container {
-	height: 100%;
-	width: 100%;
-	}
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+       	}
 
 	#sketch {
 	/*height: 100%;
@@ -24,23 +22,52 @@
 </head>
 <title>Demo</title>
 <body>
-<div id="container">
-<canvas id="sketch" data-paper-keepalive="true" keepalive="true" width="702" height="702"></canvas>
-<div id="tweets"></div>
-</div> 
+<canvas id="sketch" data-paper-keepalive="true" keepalive="true"></canvas>
+<div id="tweets"></div> 
 <script src="/socket.io/socket.io.js"></script>
-<script src="http://www.jacopocolo.com/paperjs/js/paper-full.min.js"></script>
+<script src="http://www.jacopocolo.com/pulse/js/paper-full.min.js"></script>
 
 <script>
+
+//SETUP//
+//GET SEARCH TERM (url/?search=SEARCHTERM)
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+};
+ricerca = getQueryVariable("search");
+
+//PAPERJS SETUP
 var children;
 
 window.onload = function() {
 var canvas = document.getElementById('sketch');
+//SET CANVAS SIZE
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 paper.setup(canvas);
 
-var halfx = canvas.height/2;
-var halfy = canvas.width/2;
+var halfx = window.innerWidth/2;
+var halfy = window.innerHeight/2;
 var velocita = canvas.height/600;
+var limite;
+
+calclimite = function() {
+	if (window.innerHeight >= window.innerWidth){
+		limite = window.innerHeight/2;
+		console.log(limite);
+		} else {
+			limite = window.innerWidth/2;
+			console.log(limite);
+			};
+	};
+calclimite();	
 
 //jangoFett, father of all the clones
 var jangofett = new paper.Shape.Circle({
@@ -54,8 +81,9 @@ paper.view.onFrame = function(event) {
 
 for (var i = 1; i < children.length; i++) {
 	children[i].radius += velocita;
-	if (children[i].radius >= canvas.width/2) {
+	if (children[i].radius >= limite) {
 		children[i].remove();
+		console.log("ELIMINATO");
 		}
 	}
 
@@ -63,7 +91,6 @@ paper.view.draw();
 };
 
 //SOCKET.IO
-
 var socket = io.connect('/'),
   
   tweets = document.getElementById('tweets');
@@ -74,9 +101,10 @@ var socket = io.connect('/'),
     });
   
   socket.on('connect', function(){
-                      socket.emit('search', prompt("What do you want to search on Twitter?"));
+                      socket.emit('search', ricerca);
                   });
-                  
+
+//PAPER.JS AGAIN — This function draws the circles              
 function drawLine(followers, color) {
 	
 	var spessore;

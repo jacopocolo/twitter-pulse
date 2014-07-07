@@ -14,7 +14,7 @@ var T = new Twit({
 });
  
 function handler (req, res) {
-  fs.readFile('http://www.jacopocolo.com/paperjs/index.html',
+  fs.readFile(__dirname + '/index.html',
   function (err, data) {
     if (err) {
       res.writeHead(500);
