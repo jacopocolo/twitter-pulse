@@ -34,7 +34,7 @@ function streamSearched(ricerca, id) {
 	stream = T.stream('statuses/filter', { track: ricerca })
 		
 	stream.on('connected', function (response) {
-	  //console.log(response);
+	  io.sockets.in(id).emit('connected');
 	  console.log("CONNESSO");
 	});
 	

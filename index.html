@@ -20,6 +20,17 @@
 	#sketch {
  	margin: 0 auto;
 	}
+	
+	#logmessage {
+				color: white;
+				display: block;
+				font-size: 0.9em;
+				position: absolute;
+				bottom: 0px;
+				left: 10px;
+				padding-right: 10px;
+				font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	}
 	</style>
 	
 </head>
@@ -30,10 +41,10 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://www.jacopocolo.com/pulse/js/paper-full.min.js"></script>
 <script src="http://www.jacopocolo.com/pulse/js/randomColor.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
-
-//SETUP//
+//SETUP
 
 //GET SEARCH TERM (url/?search=SEARCHTERM)
 var quiturlquery = false;
@@ -45,9 +56,10 @@ function getQueryVariable(variable)
        for (var i=0;i<vars.length;i++) {
                var pair = vars[i].split("=");
                if(pair[0] == variable){return pair[1];
-               quiturlquery = false;}
+               quiturlquery = true;}
        }
-       return(false);}
+       return;
+       }
 };
 ricerca = getQueryVariable("search");
 
@@ -113,11 +125,17 @@ var socket = io.connect('/'),
   //  tweets.innerHTML = tweets.innerHTML + '<br>' + data;
     console.log(data);
     drawLine(data_followers, datacolore);
+    $('#logmessage').text(data);
     });
   
   socket.on('connect', function(){
                       socket.emit('search', ricerca);
                   });
+                  
+  socket.on('connected', function() {
+  console.log('connesso');
+  $('body').append("<p id=\"logmessage\">Waiting for the first tweet…</p>");
+  });
 
 //PAPER.JS AGAIN — This function draws the circles              
 function drawLine(followers, color) {
