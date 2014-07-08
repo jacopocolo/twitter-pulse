@@ -32,14 +32,16 @@ var skippabletweets = [];
 
 function streamSearched(ricerca, id) {
 	stream = T.stream('statuses/filter', { track: ricerca })
-	
+		
 	stream.on('connected', function (response) {
 	  //console.log(response);
 	  console.log("CONNESSO");
-	})
+	});
 	
 	console.log(id);
 	console.log(ricerca + " tweet");
+		
+		
 		stream.on('tweet', function (tweet) {
 		   		    
 		    io.sockets.in(id).emit('tweet', tweet.text, tweet.user.followers_count, tweet.user.profile_link_color);

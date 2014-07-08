@@ -10,6 +10,11 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    background-color: #3e3e3e;
+    -moz-transition: all 10s ease-in;
+    -webkit-transition: all 10s ease-in;
+    -o-transition: all 10s ease-in;
+    transition: all 10s ease-in;
        	}
 
 	#sketch {
@@ -24,14 +29,16 @@
 <div id="tweets"></div> 
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://www.jacopocolo.com/pulse/js/paper-full.min.js"></script>
+<script src="http://www.jacopocolo.com/pulse/js/randomColor.js"></script>
 
 <script>
 
 //SETUP//
+
 //GET SEARCH TERM (url/?search=SEARCHTERM)
 var quiturlquery = false;
 function getQueryVariable(variable)
-{ if (quiturlquery === false) {
+{ if (quiturlquery == false) {
 
        var query = window.location.search.substring(1);
        var vars = query.split("&");
@@ -49,6 +56,13 @@ var children;
 
 window.onload = function() {
 var canvas = document.getElementById('sketch');
+//SET BACKGROUND COLOR
+function refreshData()
+{x = 10;
+document.body.style.backgroundColor=randomColor({luminosity: 'dark',hue: 'monochrome'});    
+setTimeout(refreshData, x*1000);
+}
+refreshData()
 //SET CANVAS SIZE
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -56,7 +70,7 @@ paper.setup(canvas);
 
 var halfx = window.innerWidth/2;
 var halfy = window.innerHeight/2;
-var velocita = canvas.height/600;
+var velocita = canvas.height/400;
 var limite;
 
 calclimite = function() {
@@ -111,22 +125,21 @@ function drawLine(followers, color) {
 	var spessore;
 
 	if (followers < 10) {
-	spessore = 0.2
-	} else if (followers > 10 && followers <= 100) {
 	spessore = 0.5
-	} else if (followers > 100 && followers <= 1000) {
+	} else if (followers > 10 && followers <= 100) {
 	spessore = 1
-	} else if (followers > 1000 && followers <= 10000) {
-	spessore = 1.5
-	} else if (followers > 10000 && followers <= 100000) {
+	} else if (followers > 100 && followers <= 1000) {
 	spessore = 2
-	} else if (followers > 1000000) {spessore = 2.5};
+	} else if (followers > 1000 && followers <= 10000) {
+	spessore = 4
+	} else if (followers > 10000 && followers <= 100000) {
+	spessore = 6
+	} else if (followers > 1000000) {spessore = 8};
 	 	
  	//all the stormstroopers are Jango's clones
  	var stormtrooper = jangofett.clone();
- 	
- 	//per qualche motivo questi non funzionano...
- 	stormtrooper.strokeColor = "#"+color;
+
+ 	stormtrooper.strokeColor = randomColor({luminosity: 'light'});
  	stormtrooper.strokeWidth = spessore;
  	
 	};
