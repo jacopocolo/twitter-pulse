@@ -70,20 +70,24 @@ window.onload = function() {
 	canvas.height = window.innerHeight;
 	console.log(canvas.width, canvas.height);
 	//SET GLOBAL VARS
-	var speed = 5;
-	var circles = new Array();
-	var limite;
 	//WHERE DO I STOP DRAWING?
+	var limite;
 	calclimite = function() {
 		if (window.innerHeight >= window.innerWidth){
-			limite = window.innerHeight/2;
+			limite = window.innerHeight;
 			console.log(limite);
 			} else {
-				limite = window.innerWidth/2;
+				limite = window.innerWidth;
 				console.log(limite);
 				};
 		};
 	calclimite();
+	
+	//SPEED is based on the largest portion of the window. With a fps of 30, if you divide it by 30 it means that every second my wave exit the canvas, if you devide it by 300, it means that every 10 seconds the wave exits the canvas
+	var speed = limite/300;
+	
+	var circles = new Array();
+	
 	//CROSS BROWSER ANIMATIONS
 	var requestAnimationFrame = window.requestAnimationFrame || 
 	                            window.mozRequestAnimationFrame ||
