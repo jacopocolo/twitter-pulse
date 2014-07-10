@@ -95,12 +95,12 @@ else {
 window.onload = function() {
 	//SETUP
 	//SET BACKGROUND COLOR
-	function refreshData()
-	{x = 10;
+	function refreshData(){
+	x = 10;
 	document.body.style.backgroundColor=randomColor({luminosity: 'dark',hue: 'monochrome'});    
 	setTimeout(refreshData, x*1000);
 	}
-	refreshData()
+	refreshData();
 	
 	//CANVAS SETUP
 	var canvas = document.getElementById('sketch');
@@ -205,7 +205,7 @@ window.onload = function() {
 	var halfy = window.innerHeight/2;
 	var width = spessore;
 	var radius = 0;
-	var color = randomColor({hue: 'blue', luminosity: 'light'});
+	var color = randomColor({luminosity: 'light'});
 	 
 	var circle = new Circle(halfx, halfy, width, radius, color);
 	circles.push(circle);
