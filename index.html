@@ -1,7 +1,18 @@
 <!doctype html>
+<html lang="en">
+<!--
+My coding philosophy
+__          ___    _       _______ ________      ________ _____   __          ______  _____  _  __ _____ 
+\ \        / / |  | |   /\|__   __|  ____\ \    / /  ____|  __ \  \ \        / / __ \|  __ \| |/ // ____|
+ \ \  /\  / /| |__| |  /  \  | |  | |__   \ \  / /| |__  | |__) |  \ \  /\  / / |  | | |__) | ' /| (___  
+  \ \/  \/ / |  __  | / /\ \ | |  |  __|   \ \/ / |  __| |  _  /    \ \/  \/ /| |  | |  _  /|  <  \___ \ 
+   \  /\  /  | |  | |/ ____ \| |  | |____   \  /  | |____| | \ \     \  /\  / | |__| | | \ \| . \ ____) |
+    \/  \/   |_|  |_/_/    \_\_|  |______|   \/   |______|_|  \_\     \/  \/   \____/|_|  \_\_|\_\_____/ 
+-->
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <meta name="viewport" content="width=device-width, height=device-height, user-scalable=yes" />
+<link href='http://fonts.googleapis.com/css?family=Fira+Sans:300, 700' rel='stylesheet' type='text/css'>
 <style>
 	html, body {
     margin:0;
@@ -26,10 +37,11 @@
 				display: block;
 				font-size: 0.9em;
 				position: absolute;
-				bottom: 0px;
+				bottom: -5px;
 				left: 10px;
 				padding-right: 10px;
-				font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+				font-family: 'Fira Sans', "Helvetica Neue", Arial, Helvetica, sans-serif;
+				font-weight: 300;
 	}
 	
 	#timeframe {
@@ -40,15 +52,18 @@
 		top: 0px;
 		right: 10px;
 		padding-left: 10px;
-		font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+		font-family: 'Fira Sans',"Helvetica Neue", Arial, Helvetica, sans-serif;
+		font-weight: 300;
 	}
-	
+		
 	#timeframe a {
 		color: white;
-		}
+		text-decoration: none;
+			}
 	
 	.selected {
-		font-weight: bold;
+		font-weight: 700;
+		text-decoration: underline;
 	}
 	
 	</style>
@@ -212,7 +227,7 @@ window.onload = function() {
 	    });
 	  
 	  socket.on('connect', function(){
-	                      socket.emit('search', prompt('cosa vuoi cercare?', 'beyonce'));
+	                      socket.emit('search', decodeURIComponent(ricerca));
 		});
 	                  
 	  socket.on('connected', function() {
@@ -238,3 +253,4 @@ window.onload = function() {
  };
 </script>
 </body>
+</html>
