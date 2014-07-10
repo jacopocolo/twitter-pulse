@@ -31,11 +31,28 @@
 				padding-right: 10px;
 				font: "Helvetica Neue", Arial, Helvetica, sans-serif;
 	}
+	
+	#timeframe {
+		color: white;
+		display: block;
+		font-size: 0.9em;
+		position: absolute;
+		top: 0px;
+		right: 10px;
+		padding-left: 10px;
+		font: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	}
+	
+	#timeframe a {
+		color: white;
+		}
+	
 	</style>
 	
 </head>
 <title>Demo</title>
 <body>
+<p id="timeframe">Time: <a href="#" id="TenSec">10 sec</a> / <a href="#" id="OneMin">1 min</a> / <a href="#" id="TenMin">10 min</a> </p>
 <canvas id="sketch" keepalive="true"></canvas>
 <div id="tweets"></div> 
 <script src="/socket.io/socket.io.js"></script>
@@ -93,7 +110,10 @@ window.onload = function() {
 	
 	//SPEED is based on the largest portion of the window. With a fps of 30, if you divide it by 30 it means that every second my wave exit the canvas, if you devide it by 300, it means that every 10 seconds the wave exits the canvas
 	var speed = limite/300;
-	
+	$('#TenSec').click(function() {speed = limite/300; return false;});
+	$('#OneMin').click(function() {speed = limite/1800; return false;});
+	$('#TenMin').click(function() {speed = limite/18000; return false;});
+		
 	var circles = new Array();
 	
 	//CROSS BROWSER ANIMATIONS
