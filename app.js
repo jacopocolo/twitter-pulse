@@ -34,7 +34,7 @@ var skippabletweets = [];
 function streamSearched(searchterm, id) {
 
 	if (searchterm == null || searchterm == false) {
-		console.log(searchterm);
+		console.log(searchterm + " problem");
 	}
 
 	else {
