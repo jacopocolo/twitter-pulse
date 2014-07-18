@@ -1,81 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Demo</title>
+<title>Heartbeat</title>
 <meta name="ROBOTS" content="NOINDEX, NOFOLLOW" />
-<script type="text/javascript">
-window.onload = function(){ 
-	//Get submit button
-	var submitbutton = document.getElementById("tfq");
-	//Add listener to submit button
-	if(submitbutton.addEventListener){
-		submitbutton.addEventListener("click", function() {
-			if (submitbutton.value == 'Search something on Twitter'){
-				submitbutton.value = '';
-			}
-		});
-	}
-}
-</script>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+<script src="js/randomColor.js"></script>
+<script src="http://safe-springs-3426.herokuapp.com/socket.io/socket.io.js"></script>
 <style type="text/css">
-	#tfheader{
-		background-color:#c3dfef;
-	}
-	#tfnewsearch{
-		float:right;
-		padding:20px;
-	}
-	.tftextinput2{
-		margin: 0;
-		padding: 5px 15px;
-		font-family: Arial, Helvetica, sans-serif;
-		font-size:14px;
-		color:#666;
-		border:1px solid #0076a3; border-right:0px;
-		border-top-left-radius: 5px 5px;
-		border-bottom-left-radius: 5px 5px;
-	}
-	.tfbutton2 {
-		margin: 0;
-		padding: 5px 7px;
-		font-family: Arial, Helvetica, sans-serif;
-		font-size:14px;
-		font-weight:bold;
-		outline: none;
-		cursor: pointer;
-		text-align: center;
-		text-decoration: none;
-		color: #ffffff;
-		border: solid 1px #0076a3; border-right:0px;
-		background: #0095cd;
-		background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
-		background: -moz-linear-gradient(top,  #00adee,  #0078a5);
-		border-top-right-radius: 5px 5px;
-		border-bottom-right-radius: 5px 5px;
-	}
-	.tfbutton2:hover {
-		text-decoration: none;
-		background: #007ead;
-		background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
-		background: -moz-linear-gradient(top,  #0095cc,  #00678e);
-	}
-	/* Fixes submit button height problem in Firefox */
-	.tfbutton2::-moz-focus-inner {
-	  border: 0;
-	}
-	.tfclear{
-		clear:both;
-	}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #3e3e3e;
+	-moz-transition: background-color 10s ease-in;
+	-webkit-transition: background-color 10s ease-in;
+	-o-transition: background-color 10s ease-in;
+	transition: background-color 10s ease-in;
+	font-family: "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+	font-weight: 300;
+}
+
+#container {
+	margin: 0 auto;
+}
+
+.absolute-center {
+	/*width: 50%;*/
+  	margin: auto;
+  	position: absolute;
+  	z-index: 100;
+  	top: 52%; left: 50%;
+  	-webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+}
+
+#tips {
+	font-size: 0.8em;
+	color: white;
+}
+
+#tips a {
+	text-decoration: none;
+	font-style: italic;
+	color: inherit;
+}
+
+#searhform {
+	min-width: 270px;
+	color: #989898;
+}
+
+#canvas {
+      -webkit-transform: translateZ(0);
+      position: absolute;
+      width: 100%; left: 0;
+      height: 100%; top: 0;
+    }
 </style>
 </head>
 <body>
 	<!-- HTML for SEARCH BAR -->
-	<div id="tfheader">
-		<form id="tfnewsearch" method="get" action="/">
-		        <input type="text" id="tfq" class="tftextinput2" name="search" size="21" maxlength="120" value="Search something on Twitter"><input type="submit" value=">" class="tfbutton2">
+	<div id="container" class="absolute-center">
+		<form class="pure-form" method="get" action="http://www.jacopocolo.com/heartbeat">
+		
+		        <input id="searhform" class="pure-input-squared" type="text" name="search" value="Search for something on Twitter" onblur="if (this.value == '') {this.value = 'Search for something on Twitter';}"
+		         onfocus="if (this.value == 'Search for something on Twitter') {this.value = '';}"> 
+		        
+		        <input type="submit" value="Search" class="pure-button">
 		</form>
-		<div class="tfclear"></div>
+		<p id="tips">Try searching for <a href="http://www.jacopocolo.com/heartbeat?search=I+am+happy">I am happy</a>, <a href="http://www.jacopocolo.com/heartbeat?search=-74,40,-73,41">New York City's tweets</a> or <a href="http://www.jacopocolo.com/heartbeat?search=Bieber">Bieber</a></p>
 	</div>
+	<canvas id="canvas"></canvas>
 </body>
+<script type="text/javascript">
+function refreshData()
+{x = 10;
+document.body.style.backgroundColor=randomColor({luminosity: 'dark',hue: 'monochrome'});    
+setTimeout(refreshData, x*1000);
+}
+refreshData();
+</script>
+<script>
+    var Demo = function() {
+
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth / 1.5;
+      canvas.height = window.innerHeight / 1.5;
+
+      var screenDiag = Math.sqrt(canvas.width * canvas.width +
+                                 canvas.height * canvas.height);
+
+      var circles = [],
+          isPaused = true;
+
+      var animationLoop = function() {
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = 0; i < circles.length; i++) {
+          context.beginPath();
+          context.strokeStyle = circles[i].color;
+          context.lineWidth = circles[i].lineWidth;
+          context.arc(~~(canvas.width / 2), ~~(canvas.height / 2),
+                      circles[i].radius += 2, 0, 2 * Math.PI, false);
+          context.stroke();
+          context.closePath();
+        }
+        circles = circles.filter(function(e) {
+          return e.radius * 2 < screenDiag;
+        });
+        if (!isPaused) {
+          window.requestAnimationFrame(animationLoop);
+        }
+
+      };
+
+      return {
+
+        addCircle: function() {
+          circles.push({
+            radius: 0,
+            color: randomColor({luminosity: 'light'}),
+            lineWidth: ~~(Math.random() * 0.5 + 1)
+          });
+        },
+        animate: function() {
+          if (!isPaused) {
+            return;
+          }
+          isPaused = false;
+          window.requestAnimationFrame(animationLoop);
+        },
+        stop: function() {
+          isPaused = true;
+        }
+
+      };
+
+    };
+
+    if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = (function() {
+
+        return window.webkitRequestAnimationFrame ||
+               window.mozRequestAnimationFrame ||
+               window.oRequestAnimationFrame ||
+               window.msRequestAnimationFrame ||
+          function(callback) {
+            window.setTimeout( callback, 1000 / 30 );
+          };
+
+      })();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      var demo = new Demo();
+
+      demo.animate();
+      demo.addCircle();
+
+      /*(function randomCircles() {
+        var interval = Math.floor(Math.random() * 2000) + 500;
+        window.setTimeout(function() {
+          demo.addCircle();
+          randomCircles();
+        }, interval);
+      })();*/
+
+      document.addEventListener('keydown', function(event) {
+        if (event.which >= 65 && event.which <= 91 ) {
+          demo.addCircle();
+        }
+      });
+
+    });
+  </script>
 </html>
 
